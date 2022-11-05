@@ -30,26 +30,22 @@ def filter_lines(filename: Path, pattern: str) -> Generator:
                 yield line
 
 
-def creating_a_file():
-    with open(f"{user_input}.txt", "w", encoding="utf-8", newline="") as file:
-        for my_pattern in filter_lines(ROCKYOU_FILENAME, user_input):
-            file.write(my_pattern + "\n")
-    return file
-
-
 def count_lines():
     with open(f"{user_input}.txt", encoding="utf-8") as file:
         all_lines = len(file.readlines())
         return all_lines
 
 
-def size_of_file():
+def file_size():
     size = asizeof.asizeof(MY_DIR / f"{user_input}.txt")
     return size
 
 
-creating = creating_a_file()
+if __name__ == "__main__":
+    with open(f"{user_input}.txt", "w", encoding="utf-8", newline="") as file:
+        for my_pattern in filter_lines(ROCKYOU_FILENAME, user_input):
+            file.write(my_pattern + "\n")
 
-print(f"✔ The file f'{user_input}.txt' created at your request! \n")
+print(f"✔ The file '{user_input}.txt' created at your request! \n")
 print(f"The total number of lines in this file is {count_lines()}\n")
-print(f"The total size of file is {size_of_file()} bytes")
+print(f"The total size of file is {file_size()} bytes")
