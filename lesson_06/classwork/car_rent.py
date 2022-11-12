@@ -23,9 +23,7 @@ class User:
 
 
 class CarRent:
-    def __init__(
-        self, user: User, car: Car, duration: int, min_price: int = 300
-    ) -> None:
+    def __init__(self, user: User, car: Car, duration: int, min_price: int = 300) -> None:
         """
         duration set in minutes
         """
