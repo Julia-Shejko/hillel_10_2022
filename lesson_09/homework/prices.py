@@ -7,8 +7,11 @@ You can to create 2 instances of a `Price` class and to do operations between th
 from dataclasses import dataclass
 from decimal import Decimal
 
+# Indices for conversion to dollars
+convert_currencies: dict = {"USD": Decimal("1.00"), "EUR": Decimal("0.97"), "UAH": Decimal("0.027")}
+
 # list of currencies available for calculation
-currencies: list = ["USD", "EUR", "UAH"]
+currencies: list = [val for val in convert_currencies]
 
 
 class PriceError(Exception):
@@ -28,39 +31,36 @@ class Price:
         return f"The prise is {self.amount} {self.currency}"
 
     def __add__(self, other: "Price") -> "Price":
+        self.comparison(other)
         print("⏳ Counting the total price...")
         return Price(amount=(self.amount + other.amount).quantize(Decimal("1.00")), currency=self.currency)
 
     def __sub__(self, other: "Price") -> "Price":
+        self.comparison(other)
         if self.amount >= other.amount:
             print("⏳ Counting the difference...")
             return Price(amount=(self.amount - other.amount).quantize(Decimal("1.00")), currency=self.currency)
         else:
             raise PriceError("The negative price is not possible 😕")
 
+    def comparison(self, other):
+        """Currency comparison."""
+        if self.currency != other.currency:
+            self.convert()
+            other.convert()
+
+    def convert(self):
+        """Performs currency conversion against the dollar"""
+        for index in convert_currencies:
+            if index == self.currency:
+                self.amount *= convert_currencies[index]
+                self.currency = "USD"
+
 
 def create_price():
     """Creates an instances of a `Price` class"""
     user_input = input(f"Available currencies: {currencies}.   Enter the price in format:\nPRICE CURRENCY\n").split(" ")
     return Price(amount=Decimal(user_input[0]), currency=user_input[1].upper())
-
-
-def convert(self):
-    """Performs currency conversion against the dollar"""
-    if self.currency == "EUR":
-        self.amount *= Decimal("0.97")
-        self.currency = "USD"
-    elif self.currency == "UAH":
-        self.amount *= Decimal("0.027")
-        self.currency = "USD"
-    return self.amount
-
-
-def comparison(self: Price, other: Price):
-    """Currency comparison."""
-    if self.currency != other.currency:
-        convert(self)
-        convert(other)
 
 
 def handle_base_errors(func):
@@ -80,8 +80,6 @@ def main():
     # Ask about prices
     price_a = create_price()
     price_b = create_price()
-
-    comparison(price_a, price_b)
 
     price_c = price_a + price_b
     price_d = price_a - price_b
