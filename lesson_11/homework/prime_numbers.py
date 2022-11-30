@@ -10,7 +10,7 @@ from threading import Thread
 result = []
 
 
-def group_numbers(start: int, end: int, amount: int) -> list:
+def group_numbers(start: int, end: int) -> list:
     numbers = [_ for _ in range(start, end + 1)]
     return numbers
 
@@ -52,7 +52,7 @@ def main():
     start = 100
     end = 10000
     amount = 5
-    grouped_numbers = group_numbers(start, end, amount)
+    grouped_numbers = group_numbers(start, end)
     final_result = run_threads(grouped_numbers, amount)
     return sorted(final_result)
 
