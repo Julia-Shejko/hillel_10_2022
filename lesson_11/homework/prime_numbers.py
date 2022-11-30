@@ -27,22 +27,30 @@ def get_primes(num: list) -> list:
 
 
 def run_threads(formed_list: list, threads_number) -> list:
-    parts_number = len(formed_list) // threads_number
+    len_list = len(formed_list)
+    parts_number = len_list // threads_number
     start_index = 0
     end_index = start_index + parts_number
 
-    for _ in formed_list:
-        if start_index <= len(formed_list) - 1:
+    for i in range(threads_number):
+        if len_list <= threads_number:
+            thread = Thread(target=get_primes, args=[formed_list[start_index:len_list]])
+            thread.start()
+            break
+        elif end_index + parts_number <= len_list - 1:
             thread = Thread(target=get_primes, args=[formed_list[start_index:end_index]])
             thread.start()
             start_index += parts_number
             end_index += parts_number
+        else:
+            thread = Thread(target=get_primes, args=[formed_list[start_index:len_list]])
+            thread.start()
     return result
 
 
 def main():
-    start = 1
-    end = 100
+    start = 100
+    end = 10000
     amount = 5
     grouped_numbers = group_numbers(start, end, amount)
     final_result = run_threads(grouped_numbers, amount)
